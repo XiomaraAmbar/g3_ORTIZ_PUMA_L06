@@ -2,11 +2,11 @@ package Stack;
 
 import LinkedList.ListaEnlazadaSinExcepciones;
 
-public class Pila<E>{
+public class PilaLinked<E>{
 
     private ListaEnlazadaSinExcepciones<E> pila;
 
-    public Pila(){
+    public PilaLinked(){
         pila = new ListaEnlazadaSinExcepciones<>();
     }
 

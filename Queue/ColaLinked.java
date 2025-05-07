@@ -2,10 +2,10 @@ package Queue;
 
 import LinkedList.ListaEnlazadaSinExcepciones;
 
-public class Cola<E> {
+public class ColaLinked<E> {
     private ListaEnlazadaSinExcepciones<E> cola;
 
-    public Cola(){
+    public ColaLinked(){
         cola = new ListaEnlazadaSinExcepciones<>();
     }
 

@@ -1,7 +1,7 @@
 package LinkedList;
 //Lista enlazada usando un nodo cabecera
 
-import Stack.Pila;
+import Stack.PilaLinked;
 
 public class ListaEnlazadaSinExcepciones<E> implements ListaTDA<E>{
     private Nodo<E> cabecera; //Se crea la variable cabecera de tipo Nodo
@@ -174,7 +174,7 @@ public class ListaEnlazadaSinExcepciones<E> implements ListaTDA<E>{
 
     public void printInvertido(){
         Nodo<E> nodoTemporal = cabecera.getSiguiente(); //Se asigna el valor del primer nodo a la variable nodoTemporal
-        Pila<E> invertido = new Pila<>(); //Se crea una nueva lista de tipo Pila
+        PilaLinked<E> invertido = new PilaLinked<>(); //Se crea una nueva lista de tipo Pila
 
         while(nodoTemporal != cabecera){ //Ciclo que verifica que no se llego al inicio de la lista
             invertido.push(nodoTemporal.getValor());

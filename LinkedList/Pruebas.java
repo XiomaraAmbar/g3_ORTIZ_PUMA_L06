@@ -1,5 +1,7 @@
 package LinkedList;
 
+import Excepciones.MensajeException;
+
 public class Pruebas {
     public static void main(String[] args) throws MensajeException {
         ListaEnlazada<String> listaPrueba1 = new ListaEnlazada<String>();

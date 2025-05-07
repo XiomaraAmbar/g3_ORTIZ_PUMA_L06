@@ -1,5 +1,7 @@
 package LinkedList;
 
+import Excepciones.MensajeException;
+
 //Interface Lista TDA
 public interface ListaTDA<E> {
 

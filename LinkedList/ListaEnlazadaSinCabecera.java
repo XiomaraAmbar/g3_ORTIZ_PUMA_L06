@@ -1,6 +1,8 @@
 package LinkedList;
 //Lista enlazada sin uso de nodo cabecera
 
+import Excepciones.MensajeException;
+
 public class ListaEnlazadaSinCabecera<E extends Nodo<E>>{ //Hereda de la clase Nodo
     private Nodo<E> primero; //Se crea la variable cabecera de tipo Nodo
 
@@ -33,7 +35,7 @@ public class ListaEnlazadaSinCabecera<E extends Nodo<E>>{ //Hereda de la clase N
     }
 
     //Verifica si el elemento x está en la lista y retorna su posición
-    public int search(E valor) throws MensajeException{
+    public int search(E valor) throws MensajeException {
         if (isEmpty()){ //Verifica si la lista esta vacía
             //Si esta vacía lanza una excepción
             throw new MensajeException("Lista enlazada vacía, no hay elementos.");
