@@ -1,13 +1,15 @@
 package Queue;
 
-import LinkedList.ListaEnlazadaSinExcepciones;
+import LinkedList.ListaEnlazada;
+import LinkedList.MensajeException;
 import LinkedList.Nodo;
 
 public class ColaDePrioridad<E> {
-    private ListaEnlazadaSinExcepciones<NodoPrioridad<String>> colaPrioridad;
+    private ListaEnlazada<ListaEnlazadaPrioridad> colaPrioridad; //Se crea una nueva cola
+    //Lo que sirve para almacenar listas enlazadas en cada nodo de la cola
 
     public ColaDePrioridad(){
-        colaPrioridad = new ListaEnlazadaSinExcepciones<>();
+        colaPrioridad = new ListaEnlazada<>();
     }
 
     //Verifica si la cola esta vacía
@@ -15,40 +17,129 @@ public class ColaDePrioridad<E> {
         return colaPrioridad.isEmpty();
     }
 
-    //Agrega el elemento x al final de la cola
-    public void enqueue(E elemento, int prioridad){
-        NodoPrioridad<E> nuevoNodo = new NodoPrioridad<>(elemento, prioridad);
-        Nodo<E> nodo = nuevoNodo;
+    //Agrega el elemento x con prioridad p.
+    public void enqueue(E elemento, int prioridad) throws MensajeException {
         if (isEmpty()){
-            colaPrioridad.insertFirst(nuevoNodo);
+            ListaEnlazadaPrioridad<E> sublista = new ListaEnlazadaPrioridad<>();
+            sublista.insertLast(elemento, prioridad);
+            sublista.setPrioridadCabecera(prioridad);
+            colaPrioridad.insertLast(sublista);
         }
         else{
+            Nodo<ListaEnlazadaPrioridad> nodoTemporal = colaPrioridad.getCabecera().getSiguiente();
+            int posicion = 0;
+            boolean nodoinsertado = false;
 
+            while (nodoTemporal != null) {
+                ListaEnlazadaPrioridad<E> sublista = nodoTemporal.getValor();
+
+                if (prioridad == sublista.getPrioridadCabecera()) {
+                    sublista.insertLast(elemento, prioridad);
+                    nodoinsertado = true;
+                    break;
+                }
+
+                if (prioridad > sublista.getPrioridadCabecera()) {
+                    ListaEnlazadaPrioridad<E> nuevaSublista = new ListaEnlazadaPrioridad<>();
+                    nuevaSublista.insertLast(elemento, prioridad);
+                    nuevaSublista.setPrioridadCabecera(prioridad);
+
+                    colaPrioridad.insertPosicionK(nuevaSublista, posicion);
+                    nodoinsertado = true;
+                    break;
+                }
+
+                nodoTemporal = nodoTemporal.getSiguiente();
+                posicion=posicion + 1;
+            }
+
+            if (!nodoinsertado) {
+                ListaEnlazadaPrioridad<E> sublistaFinal = new ListaEnlazadaPrioridad<>();
+                sublistaFinal.insertLast(elemento, prioridad);
+                sublistaFinal.setPrioridadCabecera(prioridad);
+                colaPrioridad.insertLast(sublistaFinal);
+            }
         }
-        NodoPrioridad<E> nuevoNodo = new NodoPrioridad<>(elemento, prioridad);
-        colaPrioridad.insertLast(elemento);
-
     }
 
-    //Retorna el elemento que se ubica al inicio de la cola(desencolar)
-    public E dequeue(){
-        E primero = front();
-        cola.removeNodeK(0);
+    //Elimina el elemento de mayor prioridad. La cola debe existir y no estar vacía.
+    public E dequeue() throws MensajeException {
+        E primero = frontSublista();
+        colaPrioridad.removeNodeK(0);
         return primero;
     }
 
-    //Retorna el elemento inicial de la cola
-    public E front(){
-        return cola.searchK(0);
+    //Longitud de la cola de prioridad
+    public int length() {
+        return lengthPrincipal() + lengthSublistas();
+    }
+
+    //Longitud de la cola de prioridad principal sin sublistas
+    public int lengthPrincipal() {
+        return colaPrioridad.length();
+    }
+
+    //Longitud de las sublistas
+    public int lengthSublistas() {
+        int contadorFinal = 0;
+        Nodo<ListaEnlazadaPrioridad> nodoTemporal = colaPrioridad.getCabecera().getSiguiente(); //Nuevo nodo igual a cabecera de la cola
+        while (nodoTemporal != null) {
+            ListaEnlazadaPrioridad<E> sublista = nodoTemporal.getValor();
+            contadorFinal = contadorFinal + sublista.length();
+            nodoTemporal = nodoTemporal.getSiguiente();
+        }
+        return contadorFinal;
+    }
+
+    //Elimina los elementos de la cola dejándola vacía.
+    public void destroyQueue(){
+        colaPrioridad.destroyList();
+    }
+
+    //Retorna el elemento inicial de la cola (como es prioridad retorna la sublista)
+    public ListaEnlazadaPrioridad front() throws MensajeException {
+        return colaPrioridad.searchK(0);
+    }
+
+    //Retorna el elemento inicial de la sublista del primer nodo
+    public E frontSublista() throws MensajeException {
+        if (colaPrioridad.isEmpty()){
+            throw new MensajeException("La cola de prioridad esta vacía.");
+        }
+        Nodo<ListaEnlazadaPrioridad> nodoTemporal = colaPrioridad.getCabecera().getSiguiente(); //Nuevo nodo igual a cabecera de la cola
+        ListaEnlazadaPrioridad<E> sublista = nodoTemporal.getValor();
+        if (sublista.isEmpty()){
+            throw new MensajeException("Sublista vacía.");
+        }
+        return sublista.searchK(0);
     }
 
     //Retorna el elemento final de la cola
-    public E back(){
-        return cola.searchK(cola.length()-1);
+    public ListaEnlazadaPrioridad back() throws MensajeException {
+        return colaPrioridad.searchK(colaPrioridad.length()-1);
     }
 
-    //Imprime la pila
-    public void print(){
-        cola.print();
+    //Retorna el elemento final de la sublista del primer nodo
+    public E backSublista() throws MensajeException {
+        if (colaPrioridad.isEmpty()){
+            throw new MensajeException("La cola de prioridad esta vacía.");
+        }
+        Nodo<ListaEnlazadaPrioridad> nodoTemporal = colaPrioridad.getCabecera().getSiguiente(); //Nuevo nodo igual a cabecera de la cola
+        ListaEnlazadaPrioridad<E> sublista = nodoTemporal.getValor();
+        if (sublista.isEmpty()){
+            throw new MensajeException("Sublista vacía.");
+        }
+        return sublista.searchK(colaPrioridad.length()-1);
+    }
+
+    //Verifica si la cola está llena o no. Se usa cuando la cola está implementada sobre una
+    //    estructura estática.
+    public void isFull(){
+
+    }
+
+    //Imprime la cola
+    public void print() throws MensajeException {
+        colaPrioridad.print();
     }
 }

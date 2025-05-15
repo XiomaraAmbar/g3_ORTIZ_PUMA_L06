@@ -1,23 +1,43 @@
 package Queue;
 
-public class NodoPrioridad<E>{
-    private E valor; //Valor del nodo
-    private int peso; //Peso del nodo
+public class NodoPrioridad<E> {
+    private E valor; //Información del nodo
+    private int prioridad; //Peso del nodo
+    private NodoPrioridad<E> siguiente; //Referencia al siguiente nodo o null(si la lista esta vacía)
 
-    public NodoPrioridad(E valor, int peso){
+    //Constructor que inicializa la información del nodo con su valor y la referencia del
+    //siguiente apunta a null
+    public NodoPrioridad(E valor, int prioridad){
         this.valor = valor;
-        this.peso = peso;
+        this.prioridad = prioridad;
+        this.siguiente = null;
     }
 
-    public int getPeso(){
-        return peso;
+    public E getValor(){
+        return valor;
+    } //Retorna valor o la información del nodo
+
+    public void setValor(E valor){
+        this.valor = valor;
+    } //Modifica el valor del nodo
+
+    public NodoPrioridad<E> getSiguiente(){
+        return siguiente;
+    } //Retorna la referencia del siguiente del nodo
+
+    public void setSiguiente(NodoPrioridad<E> siguiente){
+        this.siguiente = siguiente;
+    } //Modifica la referencia del siguiente al nodo
+
+    public int getPrioridad(){
+        return prioridad;
     }
 
-    public void setPeso(int nuevoPeso){
-        this.peso = nuevoPeso;
+    public void setPrioridad(int nuevaPrioridad){
+        this.prioridad = nuevaPrioridad;
     }
 
     public String toString() {
-        return "(" + valor + ", " + peso + ")";
+        return "(" + valor + ", " + prioridad + ")";
     }
 }
